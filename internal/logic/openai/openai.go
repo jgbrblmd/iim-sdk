@@ -3,6 +3,8 @@ package openai
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/os/gtime"
@@ -15,7 +17,6 @@ import (
 	"github.com/iimeta/iim-sdk/utility/sdk"
 	"github.com/iimeta/iim-sdk/utility/util"
 	"github.com/sashabaranov/go-openai"
-	"time"
 )
 
 type sOpenAI struct {
@@ -115,8 +116,14 @@ func (s *sOpenAI) Text(ctx context.Context, robot *model.Robot, message *model.M
 	messages = append(messages, chatCompletionMessage)
 
 	response, err := sdk.ChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model:    robot.Model,
-		Messages: messages,
+		Model:       robot.Model,
+		Messages:    messages,
+		MaxTokens:   1024,
+		Temperature: 0.7,
+		TopP:        0.9,
+		//Stream: true,
+		PresencePenalty:  0,
+		FrequencyPenalty: 1.15,
 	}, retry...)
 
 	if err != nil {

@@ -2,6 +2,8 @@ package chat
 
 import (
 	"context"
+	"time"
+
 	"github.com/gogf/gf/v2/os/grpool"
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/iimeta/iim-sdk/internal/consts"
@@ -11,7 +13,6 @@ import (
 	"github.com/iimeta/iim-sdk/utility/logger"
 	"github.com/iimeta/iim-sdk/utility/sdk"
 	"github.com/sashabaranov/go-openai"
-	"time"
 )
 
 type sChat struct{}
@@ -86,8 +87,14 @@ func (s *sChat) Chat(ctx context.Context, chat *model.Chat, retry ...int) (respo
 	switch chat.Corp {
 	case consts.CORP_OPENAI:
 		response, err = sdk.ChatCompletion(ctx, openai.ChatCompletionRequest{
-			Model:    chat.Model,
-			Messages: chat.Messages,
+			Model:       chat.Model,
+			Messages:    chat.Messages,
+			MaxTokens:   1024,
+			Temperature: 0.7,
+			TopP:        0.9,
+			//Stream: true,
+			PresencePenalty:  0,
+			FrequencyPenalty: 1.15,
 		}, retry...)
 	case consts.CORP_BAIDU:
 	case consts.CORP_XFYUN:
