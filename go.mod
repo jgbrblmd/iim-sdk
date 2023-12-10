@@ -1,4 +1,4 @@
-module github.com/iimeta/iim-sdk
+module github.com/jgbrblmd/iim-sdk
 
 go 1.21
 
